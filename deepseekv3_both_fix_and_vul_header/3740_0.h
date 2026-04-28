@@ -1,0 +1,14 @@
+#include <stdint.h>
+#include <stdbool.h>
+
+#define MODULE_BASE64URL 1
+#define IS_ACTIVE(x) (x)
+
+#define BASE64_UNDERLINE 62
+#define BASE64_MINUS 63
+#define BASE64_SLASH 63
+#define BASE64_PLUS 62
+#define BASE64_CAPITAL_UPPER_BOUND 25
+#define BASE64_SMALL_UPPER_BOUND 51
+#define BASE64_NUMBER_UPPER_BOUND 61
+#define BASE64_NOT_DEFINED 0

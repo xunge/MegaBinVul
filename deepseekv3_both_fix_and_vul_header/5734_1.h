@@ -1,0 +1,1 @@
+typedef struct bio_st BIO;

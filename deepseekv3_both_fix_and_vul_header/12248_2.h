@@ -1,0 +1,36 @@
+typedef unsigned long VALUE;
+typedef unsigned int ID;
+
+VALUE mOSSL;
+VALUE eOSSLError;
+VALUE cCipher;
+VALUE eCipherError;
+VALUE rb_cObject;
+VALUE rb_eStandardError;
+ID id_auth_tag_len;
+ID id_key_set;
+
+void *ossl_cipher_alloc;
+void *ossl_cipher_copy;
+void *ossl_s_ciphers;
+void *ossl_cipher_initialize;
+void *ossl_cipher_reset;
+void *ossl_cipher_encrypt;
+void *ossl_cipher_decrypt;
+void *ossl_cipher_pkcs5_keyivgen;
+void *ossl_cipher_update;
+void *ossl_cipher_final;
+void *ossl_cipher_name;
+void *ossl_cipher_set_key;
+void *ossl_cipher_set_auth_data;
+void *ossl_cipher_set_auth_tag;
+void *ossl_cipher_get_auth_tag;
+void *ossl_cipher_set_auth_tag_len;
+void *ossl_cipher_is_authenticated;
+void *ossl_cipher_set_key_length;
+void *ossl_cipher_key_length;
+void *ossl_cipher_set_iv;
+void *ossl_cipher_set_iv_length;
+void *ossl_cipher_iv_length;
+void *ossl_cipher_block_size;
+void *ossl_cipher_set_padding;

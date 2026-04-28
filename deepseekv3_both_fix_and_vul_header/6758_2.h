@@ -1,0 +1,57 @@
+#include <stdio.h>
+
+typedef struct SWF_ACTIONRECORD {
+    int ActionCode;
+} SWF_ACTIONRECORD;
+
+typedef struct SWF_ACTIONIF {
+    SWF_ACTIONRECORD Actions[1];
+} SWF_ACTIONIF;
+
+typedef struct SWF_ACTION {
+    union {
+        SWF_ACTIONRECORD SWF_ACTIONRECORD;
+        SWF_ACTIONIF SWF_ACTIONIF;
+    };
+} SWF_ACTION;
+
+typedef struct SWF_ACTIONPUSHPARAM {
+    // Placeholder structure
+} SWF_ACTIONPUSHPARAM;
+
+enum {
+    SWFACTION_INSTANCEOF,
+    SWFACTION_ADD,
+    SWFACTION_ADD2,
+    SWFACTION_SUBTRACT,
+    SWFACTION_MULTIPLY,
+    SWFACTION_DIVIDE,
+    SWFACTION_MODULO,
+    SWFACTION_SHIFTLEFT,
+    SWFACTION_SHIFTRIGHT,
+    SWFACTION_SHIFTRIGHT2,
+    SWFACTION_LOGICALAND,
+    SWFACTION_LOGICALOR,
+    SWFACTION_BITWISEAND,
+    SWFACTION_BITWISEOR,
+    SWFACTION_BITWISEXOR,
+    SWFACTION_EQUALS2,
+    SWFACTION_EQUAL,
+    SWFACTION_LESS2,
+    SWFACTION_GREATER,
+    SWFACTION_LESSTHAN,
+    SWFACTION_STRINGEQ,
+    SWFACTION_STRINGCOMPARE,
+    SWFACTION_STRICTEQUALS,
+    SWFACTION_LOGICALNOT,
+    SWFACTION_IF,
+    SWFACTION_GETMEMBER
+};
+
+int OpCode(SWF_ACTION *actions, int n, int maxn);
+int precedence(int op_l, int op_r);
+SWF_ACTIONPUSHPARAM *pop();
+void push(SWF_ACTIONPUSHPARAM *param);
+char *getString(SWF_ACTIONPUSHPARAM *param);
+SWF_ACTIONPUSHPARAM *newVar3(char *left, char *op, char *right);
+SWF_ACTIONPUSHPARAM *newVar_N(char *left, char *op1, char *op2, char *right, int dummy, char *closing);

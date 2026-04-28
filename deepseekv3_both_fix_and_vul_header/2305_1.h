@@ -1,0 +1,1 @@
+#define XK_minus '-'

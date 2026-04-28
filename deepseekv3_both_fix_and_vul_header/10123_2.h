@@ -1,0 +1,159 @@
+#include <stdbool.h>
+#include <stdint.h>
+#include <assert.h>
+#include <stddef.h>
+
+typedef unsigned int uint;
+
+typedef struct jas_image_t {
+    int cmprof_;
+} jas_image_t;
+
+typedef struct jas_stream_t jas_stream_t;
+
+typedef struct jp2_box_info_t {
+    const char *name;
+} jp2_box_info_t;
+
+typedef struct jp2_box_t {
+    uint32_t type;
+    jp2_box_info_t *info;
+    union {
+        struct {
+            uint32_t magic;
+        } jp;
+        struct {
+            uint32_t numcmpts;
+            uint8_t bpc;
+            uint8_t comptype;
+        } ihdr;
+        struct {
+            uint32_t numcmpts;
+            uint8_t *bpcs;
+        } bpcc;
+        struct {
+            uint32_t numchans;
+            struct {
+                uint16_t channo;
+                uint16_t type;
+                uint16_t assoc;
+            } *ents;
+        } cdef;
+        struct {
+            uint32_t numchans;
+            uint32_t numlutents;
+            uint8_t *bpc;
+            int_fast32_t *lutdata;
+        } pclr;
+        struct {
+            uint32_t numchans;
+            struct {
+                uint16_t cmptno;
+                uint8_t map;
+                uint8_t pcol;
+            } *ents;
+        } cmap;
+        struct {
+            uint8_t method;
+            uint8_t *iccp;
+            uint32_t iccplen;
+        } colr;
+    } data;
+} jp2_box_t;
+
+typedef struct jp2_dec_t {
+    jp2_box_t *ihdr;
+    jp2_box_t *bpcc;
+    jp2_box_t *cdef;
+    jp2_box_t *pclr;
+    jp2_box_t *cmap;
+    jp2_box_t *colr;
+    jas_image_t *image;
+    uint_fast16_t *chantocmptlut;
+    unsigned int numchans;
+} jp2_dec_t;
+
+typedef struct jp2_cmap_t {
+    uint32_t numchans;
+    struct {
+        uint16_t cmptno;
+        uint8_t map;
+        uint8_t pcol;
+    } *ents;
+} jp2_cmap_t;
+
+typedef struct jp2_pclr_t {
+    uint32_t numchans;
+    uint32_t numlutents;
+    uint8_t *bpc;
+    int_fast32_t *lutdata;
+} jp2_pclr_t;
+
+typedef struct jp2_cdef_t {
+    uint32_t numchans;
+    struct {
+        uint16_t channo;
+        uint16_t type;
+        uint16_t assoc;
+    } *ents;
+} jp2_cdef_t;
+
+typedef struct jp2_cmapent_t {
+    uint16_t cmptno;
+    uint8_t map;
+    uint8_t pcol;
+} jp2_cmapent_t;
+
+typedef struct jas_icchdr_t {
+    uint32_t colorspc;
+} jas_icchdr_t;
+
+typedef struct jas_iccprof_t jas_iccprof_t;
+
+#define JP2_BOX_JP 0x6a502020
+#define JP2_BOX_FTYP 0x66747970
+#define JP2_BOX_JP2C 0x6a703263
+#define JP2_BOX_IHDR 0x69686472
+#define JP2_BOX_BPCC 0x62706363
+#define JP2_BOX_CDEF 0x63646566
+#define JP2_BOX_PCLR 0x70636c72
+#define JP2_BOX_CMAP 0x636d6170
+#define JP2_BOX_COLR 0x636f6c72
+#define JP2_COLR_ENUM 1
+#define JP2_COLR_ICC 2
+#define JP2_CMAP_DIRECT 0
+#define JP2_CMAP_PALETTE 1
+
+#define JP2_JP_MAGIC 0x0d0a870a
+#define JP2_IHDR_COMPTYPE 7
+#define JP2_IHDR_BPCNULL 255
+
+#define JAS_CAST(type, expr) ((type)(expr))
+#define JAS_IMAGE_CT_UNKNOWN 0
+
+jp2_box_t *jp2_box_get(jas_stream_t *in);
+void jp2_box_destroy(jp2_box_t *box);
+jp2_dec_t *jp2_dec_create(void);
+void jp2_dec_destroy(jp2_dec_t *dec);
+jas_image_t *jpc_decode(jas_stream_t *in, char *optstr);
+int jas_image_numcmpts(jas_image_t *image);
+int jas_image_cmptdtype(jas_image_t *image, int cmptno);
+int jas_image_clrspc(jas_image_t *image);
+void jas_image_setclrspc(jas_image_t *image, int clrspc);
+int jas_image_cmpttype(jas_image_t *image, int cmptno);
+void jas_image_setcmpttype(jas_image_t *image, int cmptno, int type);
+void jas_image_delcmpt(jas_image_t *image, int cmptno);
+void jas_image_depalettize(jas_image_t *image, int cmptno, int numlutents, int_fast32_t *lutents, int dtype, int newcmptno);
+int jas_getdbglevel(void);
+void jas_eprintf(const char *format, ...);
+jas_iccprof_t *jas_iccprof_createfrombuf(unsigned char *buf, int len);
+void jas_iccprof_gethdr(jas_iccprof_t *prof, jas_icchdr_t *hdr);
+void jas_iccprof_destroy(jas_iccprof_t *prof);
+void *jas_cmprof_createfromiccprof(jas_iccprof_t *iccprof);
+void *jas_alloc2(size_t num_elements, size_t element_size);
+void jas_free(void *ptr);
+int jp2_getcs(void *colr);
+int fromiccpcs(unsigned int colorspc);
+int JP2_DTYPETOBPC(int dtype);
+int JP2_BPCTODTYPE(int bpc);
+int jp2_getct(int clrspc, int type, int assoc);

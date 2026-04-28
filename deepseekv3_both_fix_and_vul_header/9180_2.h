@@ -1,0 +1,66 @@
+#include <stdint.h>
+#include <string.h>
+
+typedef int INT;
+typedef unsigned int UINT;
+typedef unsigned char UCHAR;
+typedef unsigned int guint;
+typedef uint8_t guint8;
+typedef int gboolean;
+typedef char CHAR;
+
+#define AIRPDCAP_MAX_CAPLEN 4096
+#define AIRPDCAP_MAC_LEN 6
+#define AIRPDCAP_CRYPTED_DATA_MINLEN 8
+
+#define AIRPDCAP_DEBUG_LEVEL_3 3
+#define AIRPDCAP_DEBUG_LEVEL_5 5
+
+#define AIRPDCAP_RET_REQ_DATA 1
+#define AIRPDCAP_RET_NO_DATA 2
+#define AIRPDCAP_RET_WRONG_DATA_SIZE 3
+#define AIRPDCAP_RET_NO_DATA_ENCRYPTED 4
+#define AIRPDCAP_RET_SUCCESS 5
+#define AIRPDCAP_RET_UNSUCCESS 6
+
+#define MSGBUF_LEN 255
+extern CHAR msgbuf[MSGBUF_LEN];
+
+typedef struct _AIRPDCAP_MAC_FRAME_ADDR4 {
+    UCHAR addr1[AIRPDCAP_MAC_LEN];
+    UCHAR addr2[AIRPDCAP_MAC_LEN];
+    UCHAR addr3[AIRPDCAP_MAC_LEN];
+    UCHAR addr4[AIRPDCAP_MAC_LEN];
+} AIRPDCAP_MAC_FRAME_ADDR4;
+
+typedef struct _AIRPDCAP_SEC_ASSOCIATION_ID {
+    UCHAR bssid[AIRPDCAP_MAC_LEN];
+    UCHAR sta[AIRPDCAP_MAC_LEN];
+} AIRPDCAP_SEC_ASSOCIATION_ID;
+
+typedef struct _AIRPDCAP_SEC_ASSOCIATION AIRPDCAP_SEC_ASSOCIATION;
+typedef AIRPDCAP_SEC_ASSOCIATION* PAIRPDCAP_SEC_ASSOCIATION;
+
+typedef struct _AIRPDCAP_CONTEXT AIRPDCAP_CONTEXT;
+typedef AIRPDCAP_CONTEXT* PAIRPDCAP_CONTEXT;
+
+typedef struct _AIRPDCAP_KEY_ITEM AIRPDCAP_KEY_ITEM;
+typedef AIRPDCAP_KEY_ITEM* PAIRPDCAP_KEY_ITEM;
+
+#define AIRPDCAP_TYPE(x) ((x) & 0x0C)
+#define AIRPDCAP_TYPE_DATA 0x08
+#define AIRPDCAP_WEP(x) ((x) & 0x40)
+#define AIRPDCAP_EXTIV(x) ((x) & 0x20)
+#define AIRPDCAP_KEY_INDEX(x) ((x) & 0x03)
+
+extern const UCHAR broadcast_mac[AIRPDCAP_MAC_LEN];
+
+extern void AIRPDCAP_DEBUG_TRACE_START(const char*);
+extern void AIRPDCAP_DEBUG_TRACE_END(const char*);
+extern void AIRPDCAP_DEBUG_PRINT_LINE(const char*, const char*, int);
+extern const UCHAR* AirPDcapGetBssidAddress(const AIRPDCAP_MAC_FRAME_ADDR4*);
+extern const UCHAR* AirPDcapGetStaAddress(const AIRPDCAP_MAC_FRAME_ADDR4*);
+extern INT AirPDcapScanForKeys(PAIRPDCAP_CONTEXT, const guint8*, guint, guint, AIRPDCAP_SEC_ASSOCIATION_ID);
+extern INT AirPDcapWepMng(PAIRPDCAP_CONTEXT, UCHAR*, guint, guint*, PAIRPDCAP_KEY_ITEM, PAIRPDCAP_SEC_ASSOCIATION, int);
+extern INT AirPDcapRsnaMng(UCHAR*, guint, guint*, PAIRPDCAP_KEY_ITEM, PAIRPDCAP_SEC_ASSOCIATION, int);
+extern PAIRPDCAP_SEC_ASSOCIATION AirPDcapGetSaPtr(PAIRPDCAP_CONTEXT, AIRPDCAP_SEC_ASSOCIATION_ID*);

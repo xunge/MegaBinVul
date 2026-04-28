@@ -1,0 +1,10 @@
+#include <stddef.h>
+
+typedef struct js_State js_State;
+typedef struct js_Ast js_Ast;
+
+#define EXP2(type, left, right) ((left), (right), (type))
+#define BITOR 0
+
+static js_Ast *bitxor(js_State *J, int notin);
+static int jsP_accept(js_State *J, int tok);

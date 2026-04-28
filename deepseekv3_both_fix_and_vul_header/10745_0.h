@@ -1,0 +1,13 @@
+#include <stdbool.h>
+
+typedef unsigned int evtchn_port_t;
+
+struct domain {
+    struct evtchn_port_ops *evtchn_port_ops;
+};
+
+struct evtchn_port_ops {
+    bool (*is_masked)(struct domain *d, evtchn_port_t port);
+};
+
+typedef bool bool_t;
